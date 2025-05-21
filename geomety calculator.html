@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geometry Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+      background-image: url("https://i.pinimg.com/originals/97/e9/44/97e944806b43bc3ebe7022dc2b594fc9.jpg"); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 450px;
+      width: 100%;
+      background: rgba(250, 164, 189, 0.95); /* semi-transparent background */
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #FAE3C6;
+      color: #222222;
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #7a1f1f;
+      color: blue;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      font-size: 1rem;
+      border-radius: 4px;
+    }
+
+    button {
+      background: #533B4D;
+      color: #F564A9;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #096B68;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #533B4D;
+      padding: 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #F564A9;
+      text-align: center;
+    }
+
+    #message {
+      margin-top: 10px;
+      color: red;
+      font-weight: bold;
+      min-height: 22px; /* reserve space */
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Geometry Calculator</h2>
+  <p>Presented by Tanishka Yadav.</p>
+
+  <label for="shape">Select Shape:</label>
+  <select id="shape" onchange="showInputs()">
+    <option value="">-- Choose shape --</option>
+    <option value="triangle">Triangle</option>
+    <option value="rectangle">Rectangle</option>
+    <option value="square">Square</option>
+    <option value="circle">Circle</option>
+  </select>
+
+  <div id="inputs-area"></div>
+  <div id="message"></div>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div id="result" class="result" style="display:none;"></div>
+</div>
+
+<script>
+  function showInputs() {
+    const shape = document.getElementById('shape').value;
+    const inputsArea = document.getElementById('inputs-area');
+    const message = document.getElementById('message');
+    inputsArea.innerHTML = '';
+    document.getElementById('result').style.display = 'none';
+    message.textContent = ''; // clear error message
+
+    if (shape === 'triangle') {
+      inputsArea.innerHTML = `
+        <label>Side 1:</label>
+        <input type="number" id="side1" min="0" step="any" />
+        <label>Side 2:</label>
+        <input type="number" id="side2" min="0" step="any" />
+        <label>Side 3:</label>
+        <input type="number" id="side3" min="0" step="any" />
+      `;
+    } else if (shape === 'rectangle') {
+      inputsArea.innerHTML = `
+        <label>Length:</label>
+        <input type="number" id="length" min="0" step="any" />
+        <label>Breadth:</label>
+        <input type="number" id="breadth" min="0" step="any" />
+      `;
+    } else if (shape === 'square') {
+      inputsArea.innerHTML = `
+        <label>Side:</label>
+        <input type="number" id="side" min="0" step="any" />
+      `;
+    } else if (shape === 'circle') {
+      inputsArea.innerHTML = `
+        <label>Radius:</label>
+        <input type="number" id="radius" min="0" step="any" />
+      `;
+    }
+  }
+
+  function calculate() {
+    const shape = document.getElementById('shape').value;
+    const resultDiv = document.getElementById('result');
+    const message = document.getElementById('message');
+
+    resultDiv.style.display = 'none';
+    message.textContent = '';
+
+    if (!shape) {
+      message.textContent = 'Please select a shape';
+      return;
+    }
+
+    let perimeter, area;
+
+    if (shape === 'triangle') {
+      const a = parseFloat(document.getElementById('side1').value);
+      const b = parseFloat(document.getElementById('side2').value);
+      const c = parseFloat(document.getElementById('side3').value);
+
+      if (!a || !b || !c || a <= 0 || b <= 0 || c <= 0) {
+        message.textContent = 'Please enter valid positive sides for the triangle';
+        return;
+      }
+
+      if (a + b <= c || a + c <= b || b + c <= a) {
+        message.textContent = 'The given sides do not form a valid triangle.';
+        return;
+      }
+
+      const s = (a + b + c) / 2;
+      perimeter = a + b + c;
+      area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    } 
+    else if (shape === 'rectangle') {
+      const l = parseFloat(document.getElementById('length').value);
+      const b = parseFloat(document.getElementById('breadth').value);
+      if (!l || !b || l <= 0 || b <= 0) {
+        message.textContent = 'Please enter valid positive values for length and breadth';
+        return;
+      }
+      perimeter = 2 * (l + b);
+      area = l * b;
+    }
+    else if (shape === 'square') {
+      const a = parseFloat(document.getElementById('side').value);
+      if (!a || a <= 0) {
+        message.textContent = 'Please enter a valid positive side length';
+        return;
+      }
+      perimeter = 4 * a;
+      area = a * a;
+    }
+    else if (shape === 'circle') {
+      const r = parseFloat(document.getElementById('radius').value);
+      if (!r || r <= 0) {
+        message.textContent = 'Please enter a valid positive radius';
+        return;
+      }
+      perimeter = 2 * Math.PI * r;
+      area = Math.PI * r * r;
+    }
+
+    resultDiv.innerHTML = `
+      <p>Perimeter/Circumference: <strong>${perimeter.toFixed(2)}</strong></p>
+      <p>Area: <strong>${area.toFixed(2)}</strong></p>
+    `;
+    resultDiv.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
