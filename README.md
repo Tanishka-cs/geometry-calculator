@@ -67,7 +67,7 @@ If you wish to run this project on your local machine:
 
 **Tanishka Yadav**
 
-* [LinkedIn Profile](www.linkedin.com/in/tanishka-yadav-5b5021366) 
+* [LinkedIn Profile](https://www.linkedin.com/in/tanishka-yadav-5b5021366)
 * [GitHub Profile](https://github.com/Tanishka-cs)
 
 ---
